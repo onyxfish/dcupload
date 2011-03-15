@@ -1,0 +1,89 @@
+#!/usr/bin/python
+
+import base64
+import json
+from optparse import OptionParser
+import os
+import sys
+import urllib2
+
+from MultipartPostHandler import MultipartPostHandler
+
+def upload_document(username, password, file_path, title, source=None, description=None, related_article=None, published_url=None, access=None, project=None):
+    """
+    Uploads a single PDF to DocumentCloud with lots of optional metadata.
+    """
+    # Required parameters
+    params = {
+        'file': open(file_path, 'rb'),
+        'title': title
+        }
+
+    # Optional parameters
+    if source: params['source'] = source
+    if description: params['description'] = description
+    if related_article: params['related_article'] = related_article
+    if published_url: params['published_url'] = published_url
+    if access: params['access'] = access    # DC defaults to private
+    if project: params['project'] = project
+
+    opener = urllib2.build_opener(MultipartPostHandler)
+    request = urllib2.Request('https://www.documentcloud.org/api/upload.json', params)
+    auth = base64.encodestring('%s:%s' % (username, password))[:-1]
+    request.add_header('Authorization', 'Basic %s' % auth)
+
+    try:
+        ret = opener.open(request).read()
+        info = json.loads(ret)
+        print 'Uploaded %s to id: %s' % (file_path, info['id'])
+    except urllib2.URLError, exc:
+        # TODO -- retry
+        raise
+
+def upload_directory(dir, options):
+    """
+    Recursively uploads a directory of PDFs to DocumentCloud.
+    """
+    targets = []
+
+    def dir_walker(arg, dir, files):
+        for f in files:
+            if f[-4:] == '.pdf':
+                targets.append((f, os.path.join(dir, f)))
+
+    os.path.walk(dir, dir_walker, None)
+
+    for t in targets:
+        upload_document(options.username, options.password, t[1], t[0], source=options.source, access=options.access, project=options.project)
+
+def main():
+    parser = OptionParser('usage: %prog [options] directory')
+    parser.add_option('-u', '--username', dest='username',
+                  help='DocumentCloud username')
+    parser.add_option('-p', '--password', dest='password',
+                  help='DocumentCloud password')
+    parser.add_option('-s', '--source', dest='source',
+                  help='value for the documents\' "source" fields')
+    parser.add_option('-a', '--access', dest='access',
+                  help='"public", "private" or "organization" -- defaults to private')
+    parser.add_option('-r', '--project', dest='project',
+                  help='numeric id of a project to upload documents into')
+    
+    (options, args) = parser.parse_args()
+
+    if len(args) < 1:
+        print 'You must specify a directory to upload.'
+        return
+
+    if options.username == None:
+        print 'You must supply a username with the -u option.'
+        return
+
+    if options.password == None:
+        print 'You must supply a password with the -p option.'
+        return
+
+    upload_directory(args[0], options)
+
+if __name__=="__main__":
+    main()
