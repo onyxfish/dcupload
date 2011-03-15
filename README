@@ -1,0 +1,17 @@
+A quick and dirty command line tool for bulk uploading documents to DocumentCloud.
+
+Usage: dcupload [options] directory
+
+Options:
+  -h, --help            show this help message and exit
+  -u USERNAME, --username=USERNAME
+                        DocumentCloud username
+  -p PASSWORD, --password=PASSWORD
+                        DocumentCloud password
+  -s SOURCE, --source=SOURCE
+                        value for the documents' "source" fields
+  -a ACCESS, --access=ACCESS
+                        "public", "private" or "organization" -- defaults to
+                        private
+  -r PROJECT, --project=PROJECT
+                        numeric id of a project to upload documents into
