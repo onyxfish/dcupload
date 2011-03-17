@@ -1,12 +1,14 @@
+h1. dcupload
+
 A quick and dirty command line tool for bulk uploading documents to DocumentCloud.
 
-Available via pip:
+h2. Install
 
 <pre>
 pip install dcupload
 </pre>
 
-Help:
+h2. Use
 
 <pre>
 Usage: dcupload [options] directory
@@ -26,6 +28,6 @@ Options:
                         numeric id of a project to upload documents into
 </pre>
 
-License:
+h2. License
 
 MIT.
