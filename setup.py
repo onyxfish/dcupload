@@ -9,8 +9,6 @@ setup(name='dcupload',
     author_email='staringmonkey@gmail.com',
     url='https://github.com/onyxfish/dcupload',
     license='MIT',
-    #packages=['dcupload'],
-    #package_dir={'dcupload' : ''},
     py_modules = ['MultipartPostHandler'],
     scripts = ['dcupload'],
     )

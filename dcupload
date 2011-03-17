@@ -26,7 +26,7 @@ def upload_document(username, password, file_path, title, source=None, descripti
     if description: params['description'] = description
     if related_article: params['related_article'] = related_article
     if published_url: params['published_url'] = published_url
-    if access: params['access'] = access    # DC defaults to private
+    if access: params['access'] = access
     if project: params['project'] = project
 
     opener = urllib2.build_opener(MultipartPostHandler)

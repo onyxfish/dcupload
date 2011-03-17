@@ -1,5 +1,14 @@
 A quick and dirty command line tool for bulk uploading documents to DocumentCloud.
 
+Available via pip:
+
+<pre>
+pip install dcupload
+</pre>
+
+Help:
+
+<pre>
 Usage: dcupload [options] directory
 
 Options:
@@ -15,3 +24,8 @@ Options:
                         private
   -r PROJECT, --project=PROJECT
                         numeric id of a project to upload documents into
+</pre>
+
+License:
+
+MIT.
